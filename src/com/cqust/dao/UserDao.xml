@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.cqust.dao.UserDao">
+ 
+ <select id="login" parameterType="String" resultMap="tologin">
+ 	select * from `user`,`login` where user.id=login.id and user.username=#{arg0}
+		and password=#{arg1}; 
+ </select>
+ <resultMap type="login" id="tologin">
+ 	<id property="lo_id" column="lo_id"/>
+ 	<result property="id" column="id"/>
+ 	<result property="password" column="password"/>
+ 	<association property="user" javaType="user">
+ 		<id property="id" column="id"/>
+ 		<result property="username" column="username"/>
+ 		<result property="userposition" column="userposition"/>
+ 		<result property="userjob" column="userjob"/>
+ 		<result property="userbir" column="userbir"/>
+ 		<result property="usersex" column="usersex"/>
+ 		<result property="userphone" column="userphone"/>
+ 	</association>
+ </resultMap>
+ 
+ 
+ <select id="selectById" parameterType="Integer" resultMap="userResult" >
+ 	select *from `user`,`check` where `user`.id=`check`.user_id and id=#{id}
+ </select>
+ <resultMap type="user" id="userResult">
+ 		<id property="id" column="id"/>
+ 		<result property="username" column="username"/>
+ 		<result property="userposition" column="userposition"/>
+ 		<result property="userjob" column="userjob"/>
+ 		<result property="userbir" column="userbir"/>
+ 		<result property="usersex" column="usersex"/>
+ 		<result property="userphone" column="userphone"/>
+ 		<collection property="user_check" ofType="check">
+ 			<id property="bank_id" column="bank_id"/>
+ 			<result property="user_id" column="user_id"/>
+ 			<result property="banktype" column="banktype"/>
+ 			<result property="count" column="count"/>
+ 		</collection>
+ 		
+ </resultMap>
+ 
+ <select id="check" resultType="check" parameterType="Integer">
+		select * from `check` where bank_id=#{bank_id}
+	</select>
+<select id="selUserIdcheck" resultType="check" parameterType="Integer">
+		select * from `check` where user_id=#{user_id}
+	</select>
+ 	<update id="updateCheck" parameterType="check" keyProperty="bank_id" useGeneratedKeys="true">
+		update `check` set  count=#{count} where bank_id=#{bank_id}
+	</update>
+	<insert id="insertCheck" parameterType="check" useGeneratedKeys="true"
+		keyProperty="bank_id" keyColumn="bank_id">
+			insert into `check`(user_id,banktype,count)
+				values(#{user_id},#{banktype},#{count})
+		</insert>
+ <insert id="insertUser" parameterType="user" useGeneratedKeys="true"
+		keyProperty="id" keyColumn="id">
+		insert into
+		`user`(username,userposition,userjob,userbir,usersex,userphone)
+		values(#{username},#{userposition},#{userjob},#{userbir},#{usersex},#{userphone})
+	</insert>
+	<insert id="insertLogin" parameterType="login" useGeneratedKeys="true"
+		keyProperty="lo_id" keyColumn="lo_id">
+		insert into
+		`login`(id,password) values(#{id},#{password})
+	</insert>
+	<update id="updateLogin" parameterType="login" keyProperty="lo_id" useGeneratedKeys="true" >
+		update 	`login` set password=#{password} where id=#{id}
+	</update>
+	<select id="selectLogin" resultType="login" parameterType="Integer">
+		select * from `login` where id=#{id}
+	</select>
+	<update id="updateUser" parameterType="user" useGeneratedKeys="true"
+		keyProperty="id" keyColumn="id">
+		update 	`user`
+		<set>
+			<if test="username!=null"> 
+				username=#{username},
+			</if>
+			<if test="userposition!=null"> 
+				userposition=#{userposition},
+			</if>
+			<if test="userjob!=null"> 
+				userjob=#{userjob},
+			</if>
+			<if test="userbir!=null"> 
+				userbir=#{userbir},
+			</if>
+			<if test="usersex!=null"> 
+				usersex=#{usersex},
+			</if>
+			<if test="userphone!=null"> 
+				userphone=#{userphone},
+			</if>
+		</set>where id=#{id}
+	</update>
+	<delete id="delCheck" parameterType="Integer">
+		delete from `check` where bank_id=#{bank_id}
+	</delete>
+	<select  id="selectBook" resultType="book" >
+		select *from book
+	</select>
+	<select  id="selectByIdBook" resultType="book"  parameterType="Integer">
+		select *from book where book_id=#{book_id}
+	</select>
+	<update id="updateBook" parameterType="book" useGeneratedKeys="true"
+		keyProperty="book_id" keyColumn="book_id">
+		update 	`book`
+		<set>
+			<if test="book_name!=null"> 
+				book_name=#{book_name},
+			</if>
+			<if test="book_author!=null"> 
+				book_author=#{book_author},
+			</if>
+			<if test="book_publish!=null"> 
+				book_publish=#{book_publish},
+			</if>
+			<if test="book_price!=null"> 
+				book_price=#{book_price},
+			</if>
+			<if test="book_count!=null"> 
+				book_count=#{book_count},
+			</if>
+		</set>where book_id=#{book_id}
+	</update>
+ </mapper>

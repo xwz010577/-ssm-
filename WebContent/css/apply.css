@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+#bj{margin:100px auto;width:100%;height: 550px;text-align:center; }
+.input-group{
+	width: 250px;padding-bottom: 10px;
+}
+.sel{
+	width:250px;
+}
+.bo{
+	width:250px;padding-left: 44%;
+}
